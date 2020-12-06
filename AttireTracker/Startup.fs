@@ -27,10 +27,7 @@ type Startup private () =
         if (env.IsDevelopment()) then
             app.UseDeveloperExceptionPage() |> ignore
 
-        app.UseHttpsRedirection() |> ignore
         app.UseRouting() |> ignore
-
-        app.UseAuthorization() |> ignore
 
         app.UseEndpoints(fun endpoints ->
             endpoints.MapControllers() |> ignore

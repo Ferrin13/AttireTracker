@@ -15,9 +15,12 @@ module Program =
     let exitCode = 0
 
     let CreateHostBuilder args =
+        // let port = Environment.GetEnvironmentVariable("INTERNAL_PORT")
+        let port = "8080"
+        let url = "http://0.0.0.0:" + port
         Host.CreateDefaultBuilder(args)
             .ConfigureWebHostDefaults(fun webBuilder ->
-                webBuilder.UseStartup<Startup>() |> ignore
+                webBuilder.UseStartup<Startup>().UseUrls(url) |> ignore
             )
 
     [<EntryPoint>]
