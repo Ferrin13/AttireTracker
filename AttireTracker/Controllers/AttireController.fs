@@ -14,4 +14,4 @@ type AttireController (logger : ILogger<AttireController>) =
 
     [<HttpGet>]
     member __.Get() : string =
-        "Eventually some attire"
+        "The release branch, no attire yet."
