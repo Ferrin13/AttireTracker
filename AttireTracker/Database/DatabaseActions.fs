@@ -15,6 +15,8 @@ let connString = "Host=" + host + ";Port=" + port + ";Username=" + username + ";
 
 Dapper.DefaultTypeMap.MatchNamesWithUnderscores <- true
 
+printfn "Host: %s Port: %s" host port
+
 let getConnection() =
     let connection = new NpgsqlConnection(connString)
     connection.Open() |> ignore
