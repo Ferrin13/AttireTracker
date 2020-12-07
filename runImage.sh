@@ -1,4 +1,9 @@
 VERSION_NUMBER=${1:-'0.1.0'}
 
-docker run -p 9091:8080 attire-tracker:$VERSION_NUMBER \
-    -e INTERNAL_PORT=8080
+docker run -p 9091:8080 \
+    -e INTERNAL_PORT=8080 \
+    -e ATTIRE_TRACKER_DB_USERNAME \
+    -e ATTIRE_TRACKER_DB_PASSWORD \
+    -e ATTIRE_TRACKER_DB_HOST \
+    -e ATTIRE_TRACKER_DB_DATABASE \
+    attire-tracker:$VERSION_NUMBER 

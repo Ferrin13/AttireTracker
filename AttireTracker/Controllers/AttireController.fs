@@ -6,6 +6,8 @@ open System.Linq
 open System.Threading.Tasks
 open Microsoft.AspNetCore.Mvc
 open Microsoft.Extensions.Logging
+open DatabaseActions
+open DatabaseModels
 
 [<ApiController>]
 [<Route("/attirePieces")>]
@@ -14,4 +16,11 @@ type AttireController (logger : ILogger<AttireController>) =
 
     [<HttpGet>]
     member __.Get() : string =
-        "The release branch, no attire yet."
+        let newPiece = { name = "Live Test"; photoUrl = "PHOTO_URL_EXAMPLE" }
+
+        insertAttirePiece(newPiece) |> Async.RunSynchronously |> ignore
+
+        getAllAttirePieces() 
+        |> Async.RunSynchronously
+        |> Seq.map(fun a -> a.id.ToString() + ", " + a.name + ", " + a.photoUrl)
+        |> String.concat "\n"
