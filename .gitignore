@@ -341,4 +341,4 @@ healthchecksdb
 
 # Enmbedded
 Embedded/WifiSecrets.h
-Embedded/build
+Embedded/build/*
