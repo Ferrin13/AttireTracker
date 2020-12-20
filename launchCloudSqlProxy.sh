@@ -1,0 +1,1 @@
+cloud_sql_proxy -instances=attire-tracker:us-west1:attire-tracker-db=tcp:0.0.0.0:3306 -credential_file=C:/Users/CalebsLaptop/Downloads/attire-tracker-bbf35f58c0fc.json
