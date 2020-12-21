@@ -6,8 +6,12 @@
 
   <ItemGroup>
     <Compile Include="Database\DatabaseModels.fs" />
-    <Compile Include="Database\DatabaseActions.fs" />
-    <Compile Include="Controllers\AttirePieceController.fs" />
+    <Compile Include="Database\DatabaseConnection.fs" />
+    <Compile Include="Database\AttirePieceQueries.fs" />
+    <Compile Include="Database\AttireActivityQueries.fs" />
+    <Compile Include="Services\AttirePieceService.fs" />
+    <Compile Include="Services\AttireActivityService.fs" />
+    <Compile Include="Controllers\AttireController.fs" />
     <Compile Include="Startup.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>

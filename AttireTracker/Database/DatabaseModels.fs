@@ -2,6 +2,8 @@
 
 open System
 
+type ActivityTypeId = CheckIn = 1 | CheckOut = 2
+
 [<CLIMutable>]
 type AttirePiece = 
     { id: int
@@ -21,8 +23,8 @@ type NewAttirePieceActivityHistory =
 
 [<CLIMutable>]
 type CombinedActivityHistory = 
-    { attire_piece_activity_history_id: int
+    { attirePieceActivityHistoryId: int
+      activityTypeId: ActivityTypeId
       description: string
-      activity_time: DateTimeOffset }
+      activityTime: DateTimeOffset }
 
-type ActivityTypeId = CheckIn = 1 | CheckOut = 2

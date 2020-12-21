@@ -1,21 +1,16 @@
 ﻿namespace AttireTracker.Controllers
 
-open System
-open System.Collections.Generic
-open System.Linq
-open System.Threading.Tasks
 open Microsoft.AspNetCore.Mvc
 open Microsoft.Extensions.Logging
-open DatabaseActions
-open DatabaseModels
 open FSharp.Json
+open AttirePieceService
+open AttireActivityService
 
 [<ApiController>]
-[<Route("/attirePieces")>]
 type AttirePieceController (logger : ILogger<AttirePieceController>) =
     inherit ControllerBase()
 
-    [<HttpGet>]
+    [<HttpGet("/attirePieces")>]
     member __.GetAll(rfidUid: string) : string =
         let gePieceByUid(rfidUid: string) =
             let optionPiece = getAttirePieceByUid(rfidUid) |> Async.RunSynchronously
@@ -39,10 +34,19 @@ type AttirePieceController (logger : ILogger<AttirePieceController>) =
         |> Async.RunSynchronously 
         |> Json.serialize
 
-    [<HttpPost("/attirePieces/{rfidUid}/activity")>]
-    member __.Post(rfidUid: string) : string =
-        addToActivityHistory(rfidUid, ActivityTypeId.CheckOut) |> Async.RunSynchronously |> ignore
+    [<HttpGet("/attirePieces/{rfidUid}/activity/last")>]
+    member __.GetLastActivity(rfidUid: string) : string =
+        getLastActivityByUid(rfidUid) 
+        |> Async.RunSynchronously 
+        |> Json.serialize
 
-        getActivityHistoryByUid(rfidUid) 
+    [<HttpPost("/attirePieces/{rfidUid}/activity")>]
+    member __.ToggleActivity(rfidUid: string) : string =
+        let lastActivity = getLastActivityByUid(rfidUid) |> Async.RunSynchronously
+        let newActivityType = nextActivityType(lastActivity)
+
+        addToActivityHistory(rfidUid, newActivityType) |> Async.RunSynchronously |> ignore
+
+        getLastActivityByUid(rfidUid) 
         |> Async.RunSynchronously 
         |> Json.serialize

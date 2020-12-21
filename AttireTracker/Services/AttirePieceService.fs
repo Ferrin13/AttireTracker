@@ -1,0 +1,5 @@
+﻿module AttirePieceService
+
+let getAttirePieceByUid = AttirePieceQueries.getAttirePieceByUid
+let getAllAttirePieces = AttirePieceQueries.getAllAttirePieces
+let insertAttirePiece = AttirePieceQueries.insertAttirePiece
