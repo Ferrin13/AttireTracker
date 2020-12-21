@@ -9,7 +9,8 @@
                 "C:\\Program Files (x86)\\Arduino\\libraries\\**",
                 "C:\\Program Files (x86)\\Arduino\\hardware\\arduino\\avr\\libraries\\SPI\\src",
                 "C:\\Users\\CalebsLaptop\\AppData\\Local\\Arduino15\\packages\\esp8266\\tools\\**",
-                "C:\\Users\\CalebsLaptop\\AppData\\Local\\Arduino15\\packages\\emptyPlaceholders\\*"
+                "C:\\Users\\CalebsLaptop\\AppData\\Local\\Arduino15\\packages\\emptyPlaceholders\\*",
+                "C:\\Users\\CalebsLaptop\\source\\repos\\Arduino\\libraries\\ESP8266HTTPClient\\src"
             ],
             "defines": [
                 "_DEBUG",
