@@ -4,7 +4,7 @@
 #include <SPI.h>
 #include "MFRC522.h"
 #include "WifiSecrets.h"
-
+#include "ActivityModeService.h"
 /* wiring the MFRC522 to ESP8266 (ESP-12)
 RST     = GPIO5
 SDA(SS) = GPIO4 
@@ -16,10 +16,11 @@ GND     = GND
 */
 
 //Use GPIO Pin numbers
-#define RST_PIN	5 
+#define RST_PIN	16
 #define SS_PIN	15  
-#define SEND_REQUEST_TOGGLE_INPUT_PIN 4
-#define SEND_REQUEST_TOGGLE_OUTPUT_PIN 0
+#define SEND_REQUEST_TOGGLE_INPUT_PIN 9
+#define SEND_REQUEST_TOGGLE_OUTPUT_PIN 2 //Onboard LED
+#define UPDATE_MODE_PIN 0
 
 #define WIFI_CONNECTION_RETRY_TIMEOUT_MS 10000
 #define WIFI_CONNECTION_RETRY_INTERNVAL_MS 500
@@ -30,6 +31,7 @@ String host = "https://attire-tracker-kxhmjx7pyq-uw.a.run.app";
 
 MFRC522 mfrc522(SS_PIN, RST_PIN);
 WiFiClientSecure wifiClient;
+ActivityModeService modeService(UPDATE_MODE_PIN);
 
 bool sendHttpRequests = false;
 bool sendHttpRequestDebounce = false;
@@ -54,6 +56,7 @@ void setup() {
 
 void loop() { 
   updateAndDisplaySendRequestToggle();
+  modeService.update();
   listenForAndHandleRfidChange();
   delay(50);
 }
@@ -72,7 +75,7 @@ void updateAndDisplaySendRequestToggle()
     sendHttpRequestDebounce = false;
   }
 
-  digitalWrite(SEND_REQUEST_TOGGLE_OUTPUT_PIN, sendHttpRequests);
+  digitalWrite(SEND_REQUEST_TOGGLE_OUTPUT_PIN, !sendHttpRequests); //Onboard LED is on when pin is low.
 }
 
 void listenForAndHandleRfidChange()
@@ -106,7 +109,9 @@ void onNewCardDetected(MFRC522 mfrc)
 void toggleActivityRequest(String rfidUid)
 {
   wifiClient.setInsecure();
+  Serial.println("Attempting to connect to: ");
   wifiClient.connect(host, 443);
+  
   
   if(!wifiClient.connected())
   {
@@ -115,7 +120,7 @@ void toggleActivityRequest(String rfidUid)
   }
 
   HTTPClient http; 
-  http.begin(wifiClient, host + "/attirePieces/" + rfidUid + "/activity");
+  http.begin(wifiClient, getModeEndpoint(modeService.getMode(), rfidUid));
   
   int httpCode = http.POST("");
   String response = http.getString();
@@ -128,6 +133,11 @@ void toggleActivityRequest(String rfidUid)
 
   http.end();
   wifiClient.stop();
+}
+
+static String getModeEndpoint(ActivityMode mode, String rfidUid) {
+  String modeUrlFragment = mode == laundry ? "laundry" : "wardrobe";
+  return host + "/attirePieces/" + rfidUid + "/activity/" + modeUrlFragment;
 }
 
 bool getCardIsPresentDebounced()
