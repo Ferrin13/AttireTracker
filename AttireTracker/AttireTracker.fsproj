@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="Models\InternalModels.fs" />
     <Compile Include="Database\DatabaseModels.fs" />
     <Compile Include="Database\DatabaseConnection.fs" />
     <Compile Include="Database\AttirePieceQueries.fs" />

@@ -2,7 +2,7 @@
 
 open System
 
-type ActivityTypeId = CheckIn = 1 | CheckOut = 2
+type ActivityTypeId = Wardrobe = 1 | InUse = 2 | Laundry = 3
 
 [<CLIMutable>]
 type AttirePiece = 

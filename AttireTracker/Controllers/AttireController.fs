@@ -5,6 +5,7 @@ open Microsoft.Extensions.Logging
 open FSharp.Json
 open AttirePieceService
 open AttireActivityService
+open InternalModels
 
 [<ApiController>]
 type AttirePieceController (logger : ILogger<AttirePieceController>) =
@@ -40,10 +41,38 @@ type AttirePieceController (logger : ILogger<AttirePieceController>) =
         |> Async.RunSynchronously 
         |> Json.serialize
 
-    [<HttpPost("/attirePieces/{rfidUid}/activity")>]
-    member __.ToggleActivity(rfidUid: string) : string =
+    //[<HttpPost("/attirePieces/{rfidUid}/activity")>]
+    //member __.ToggleActivity(rfidUid: string) : string =
+    //    let lastActivity = getLastActivityByUid(rfidUid) |> Async.RunSynchronously
+    //    let newActivityType = nextActivityType(lastActivity)
+
+    //    addToActivityHistory(rfidUid, newActivityType) |> Async.RunSynchronously |> ignore
+
+    //    getLastActivityByUid(rfidUid) 
+    //    |> Async.RunSynchronously 
+    //    |> Json.serialize
+
+    // We prefer toggles here rather than the more "correct" approach of parameterizing the
+    // state because it offloads computational work from the client to the API.
+    // See nextActivityType comment for more information on valid state changes.
+    [<HttpPost("/attirePieces/{rfidUid}/activity/wardrobe")>]
+    member __.ToggleWardrobe(rfidUid: string) : string =
         let lastActivity = getLastActivityByUid(rfidUid) |> Async.RunSynchronously
-        let newActivityType = nextActivityType(lastActivity)
+        let newActivityType = nextActivityType(lastActivity, ToggleType.Wardrobe)
+
+        addToActivityHistory(rfidUid, newActivityType) |> Async.RunSynchronously |> ignore
+
+        getLastActivityByUid(rfidUid) 
+        |> Async.RunSynchronously 
+        |> Json.serialize
+
+    // We prefer toggles here rather than the more "correct" approach of parameterizing the
+    // state because it offloads computational work from the client to the API.
+    // See nextActivityType comment for more information on valid state changes.
+    [<HttpPost("/attirePieces/{rfidUid}/activity/laundry")>]
+    member __.ToggleLaundry(rfidUid: string) : string =
+        let lastActivity = getLastActivityByUid(rfidUid) |> Async.RunSynchronously
+        let newActivityType = nextActivityType(lastActivity, ToggleType.Laundry)
 
         addToActivityHistory(rfidUid, newActivityType) |> Async.RunSynchronously |> ignore
 
