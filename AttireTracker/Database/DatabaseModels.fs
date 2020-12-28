@@ -25,6 +25,7 @@ type NewAttirePieceActivityHistory =
 type CombinedActivityHistory = 
     { attirePieceActivityHistoryId: int
       activityTypeId: ActivityTypeId
+      pieceName: string
       description: string
       activityTime: DateTimeOffset }
 

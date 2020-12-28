@@ -3,6 +3,7 @@
 #include "RfidService.h"
 #include "HttpsService.h"
 #include "WifiSecrets.h"
+#include "JsonHelpers.h"
 
 //Use GPIO Pin numbers
 #define RST_PIN	16
@@ -80,7 +81,11 @@ void updateActivityHistoryRequest(String rfidUid)
 {
   String path = getModePath(modeService.getMode(), rfidUid);
   String result = httpsService.post(host, path, "");
-  Serial.println(result);
+  String pieceName = getStringProperty(result, "pieceName");
+  String newStatus = getStringProperty(result, "description");
+  Serial.print(pieceName);
+  Serial.print(" status updated to: ");
+  Serial.println(newStatus);
 }
 
 static String getModePath(ActivityMode mode, String rfidUid) {
