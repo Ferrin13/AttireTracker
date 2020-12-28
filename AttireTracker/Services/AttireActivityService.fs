@@ -33,7 +33,11 @@ let nextActivityType(previousActivity: Option<CombinedActivityHistory>, toggleTy
     | _ -> ActivityTypeId.Wardrobe //If this is the first activity for this piece, it goes in the wardrove
 
 let addToActivityHistory = AttireActivityQueries.addToActivityHistory
-let getLastActivityByUid= AttireActivityQueries.getLastActivityByUid
+let getLastActivityByUid(rfidUid: string) =
+    async {
+        let! results = AttireActivityQueries.getActivityHistoryByUid(rfidUid)
+        return results |> Seq.tryHead
+    }
 let getActivityHistoryByUid(rfidUid: string) =
     async {
         let! results = AttireActivityQueries.getActivityHistoryByUid(rfidUid)

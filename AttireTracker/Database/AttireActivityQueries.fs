@@ -31,6 +31,7 @@ let getActivityHistoryByUid(rfidUid: string) =
             SELECT 
             	attire_piece_activity_history_id,
                 activity_type_id,
+                AP.name as piece_name,
             	description,
             	activity_time
             FROM
@@ -46,29 +47,4 @@ let getActivityHistoryByUid(rfidUid: string) =
     
         let! results = connection.QueryAsync<CombinedActivityHistory>(sql, {|rfidUid = rfidUid|}) |> Async.AwaitTask
         return results |> List.ofSeq
-    }
-
-let getLastActivityByUid(rfidUid: string) =
-    async {
-        use connection = getConnection()
-        
-        let sql = @"
-            SELECT 
-                attire_piece_activity_history_id,
-                activity_type_id,
-                description,
-                activity_time
-            FROM
-                attire_piece_activity APA
-                JOIN attire_piece AP
-                	ON AP.attire_piece_id = APA.attire_piece_id
-                JOIN attire_activity_type AAT
-                	ON AAT.attire_activity_type_id = APA.activity_type_id	
-            WHERE
-                AP.rfid_uId = @rfidUid
-            ORDER BY 
-                attire_piece_activity_history_id DESC"
-        
-        let! results = connection.QueryAsync<CombinedActivityHistory>(sql, {|rfidUid = rfidUid|}) |> Async.AwaitTask
-        return results |> List.ofSeq |> Seq.tryHead
     }
