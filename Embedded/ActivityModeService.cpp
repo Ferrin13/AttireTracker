@@ -16,6 +16,7 @@ void ActivityModeService::update()
   {
     updateModeDebounce = true;
     mode = getNextMode(mode);
+    onModeUpdated(mode);
     Serial.println("Mode set to: " + modeToString(mode));
   }
   else if (!buttonIsPressed) {
@@ -26,6 +27,14 @@ void ActivityModeService::update()
 ActivityMode ActivityModeService::getMode()
 { 
   return mode;
+}
+
+void ActivityModeService::registerOnModeUpdate(std::function<void(ActivityMode)> onModeUpdated)
+{
+  // char buffer[50];
+  // sprintf(buffer, "Test function initial address is %p", reinterpret_cast<void*&>(onCardDetected));
+  // Serial.println(buffer);
+  this->onModeUpdated = onModeUpdated;
 }
 
 String modeToString(ActivityMode mode)

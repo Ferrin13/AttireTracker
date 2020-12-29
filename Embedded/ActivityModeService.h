@@ -11,11 +11,13 @@ class ActivityModeService {
   byte modeUpdatePin;
   bool updateModeDebounce = false;
   ActivityMode mode = wardrobe;
+  std::function<void(ActivityMode)> onModeUpdated;
   
 public:
   ActivityModeService(byte updatePin);
   void update();
   ActivityMode getMode();
+  void registerOnModeUpdate(std::function<void(ActivityMode)> onModeUpdated);
 };
 
 String modeToString(ActivityMode mode);
