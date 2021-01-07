@@ -6,6 +6,15 @@
 #include "WifiSecrets.h"
 #include "JsonHelpers.h"
 
+// SDA (0) -> D8 (0)
+// SCK (1) -> D5 (3)
+// MOSI (2) -> D7 (1)
+// MISO (3) -> D6 (2)
+// IRQ(4) -> Nothing
+// GND (5) -> GND
+// RST (6) -> D0
+// 3.3v (7) -> 3.3V
+
 //Use GPIO Pin numbers
 #define RST_PIN	16
 #define SS_PIN	15  
@@ -22,10 +31,9 @@ RfidService rfidService(SS_PIN, RST_PIN);
 HttpsService httpsService(wifiSsid, wifiPassword);
 LcdService lcdService;
 
-bool sendHttpRequests = false;
+bool sendHttpRequests = true;
 bool sendHttpRequestDebounce = false;
 
-// LiquidCrystal_I2C lcd = LiquidCrystal_I2C(0x27, 16, 2); // Change to (0x27,20,4) for 20x4 LCD.
 void setup() {
   pinMode(SEND_REQUEST_TOGGLE_INPUT_PIN, INPUT_PULLUP);
   pinMode(SEND_REQUEST_TOGGLE_OUTPUT_PIN, OUTPUT);
@@ -33,10 +41,11 @@ void setup() {
   Serial.begin(115200);
   delay(250);
   Serial.println("Booting....");
+  lcdService.init();
+  lcdService.displayCenteredString("Booting", 1);
   
   rfidService.init();
   httpsService.init();
-  lcdService.init();
 
   rfidService.registerOnCardDetected(onCardDetected);
   rfidService.registerOnCardRemoved(onCardRemoved);
@@ -45,6 +54,8 @@ void setup() {
   Serial.println(F("Attire Tracker Embedded Launching"));
   Serial.println(F("======================================================")); 
   Serial.println(F("Scan for Card and print UID:"));
+  lcdService.displayCenteredString("Mode: " + modeToString(modeService.getMode()), 0);
+  lcdService.displayCenteredString("", 1);
 }
 
 void loop() { 
@@ -72,8 +83,9 @@ void updateAndDisplaySendRequestToggle()
 }
 
 void onCardDetected(String uid) {
-  Serial.println("Card UID: " + uid);
-  showCardUid(uid);
+  Serial.println("Card detected:");
+  Serial.println(uid);
+  showCardDetected(uid);
 
   if(sendHttpRequests)
     updateActivityHistoryRequest(uid);
@@ -84,6 +96,8 @@ void onCardRemoved() {
 }
 
 void onModeUpdated(ActivityMode mode) {
+  Serial.print("Mode updated to: ");
+  Serial.println(modeToString(mode));
   lcdService.displayCenteredString("Mode: " + modeToString(mode), 0);
 }
 
@@ -108,9 +122,9 @@ void showPieceUpdate(String pieceName, String newStatus) {
   lcdService.displayCenteredString(newStatus, 3);
 }
 
-void showCardUid(String uid) {
+void showCardDetected(String uid) {
   lcdService.clearRows(1, 3);
-  lcdService.displayCenteredString("Card UID", 1);
+  lcdService.displayCenteredString("Requesting Info...", 1);
   lcdService.displayCenteredString(uid, 2);
 }
 

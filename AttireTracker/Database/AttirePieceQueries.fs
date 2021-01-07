@@ -11,11 +11,14 @@ let getAllAttirePieces() =
         let sql = @"
             SELECT
                 attire_piece_id as id,
-                name,
+                AP.name,
                 rfid_uid,
-                photo_url
+                photo_url,
+                category_id
             FROM
-                attire_piece"
+                attire_piece AP
+                JOIN attire_piece_category APC
+                    ON APC.attire_piece_category_id = AP.category_id"
 
         let! results = connection.QueryAsync<AttirePiece>(sql) |> Async.AwaitTask
         return results 
@@ -28,11 +31,14 @@ let getAttirePieceByUid(rfidUid: string) =
         let sql = @"
             SELECT
                 attire_piece_id as id,
-                name,
+                AP.name,
                 rfid_uid,
-                photo_url
+                photo_url,
+                category_id
             FROM
-                attire_piece
+                attire_piece AP
+                JOIN attire_piece_category APC
+                    ON APC.attire_piece_category_id = AP.category_id
             WHERE
                 rfid_uid = @rfidUid"
 
@@ -47,8 +53,8 @@ let insertAttirePiece(attirePiece: NewAttirePiece) =
 
         let sql = @"
             INSERT INTO attire_piece
-            (name, rfid_uid, photo_url)
-            VALUES (@name, @rfidUid, @photoUrl)"
+            (name, rfid_uid, photo_url, attire_piece_type_id, type_id)
+            VALUES (@name, @rfidUid, @photoUrl, @typeId)"
 
         let! res = connection.ExecuteAsync(sql, attirePiece) |> Async.AwaitTask
         return res

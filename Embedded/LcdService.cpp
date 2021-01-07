@@ -24,7 +24,7 @@ void LcdService::clearRows(int startIndex, int endIndex) {
 void LcdService::displayCenteredString(String str, int rowIndex) {
   int totalOffset = 20 - str.length();
   String leftPaddingString = createEmptyString(totalOffset / 2);
-  String rightPaddingString = createEmptyString((totalOffset / 2) + (totalOffset % 2));
+  String rightPaddingString = createEmptyString((totalOffset / 2) + (totalOffset % 2)); // Account for int rounding
   lcd.setCursor(0, rowIndex);
   lcd.print(leftPaddingString + str + rightPaddingString); 
 }
@@ -35,10 +35,4 @@ String createEmptyString(int countChars) {
     result += ' ';
   }
   return result;
-  // char buffer[countChars + 1];
-  // for(int i = 0; i < countChars; i++) {
-  //   buffer[i] = ' ';
-  // }
-  // buffer[countChars] = '\0';
-  // return buffer;
 }

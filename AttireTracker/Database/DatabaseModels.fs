@@ -3,18 +3,21 @@
 open System
 
 type ActivityTypeId = Wardrobe = 1 | InUse = 2 | Laundry = 3
+type AttireCategoryId = Top = 1 | Bottom = 2 | TopOverwear = 3
 
 [<CLIMutable>]
 type AttirePiece = 
     { id: int
       name: string
       photoUrl: string
-      rfidUid: string }
+      rfidUid: string
+      categoryId: AttireCategoryId }
 
 type NewAttirePiece = 
     { name: string
       photoUrl: string 
-      rfidUid: string }
+      rfidUid: string
+      categoryId: AttireCategoryId }
 
 type NewAttirePieceActivityHistory = 
     { attire_piece_id: int
