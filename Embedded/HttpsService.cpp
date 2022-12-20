@@ -8,7 +8,7 @@ HttpsService::HttpsService(const char *wifiSsid, const char *wifiPassword) {
 
 void HttpsService::init() {
   WiFi.begin(wifiSsid, wifiPassword);
-  
+   
   int retries = 0;
   int maxNumRetries = WIFI_CONNECTION_RETRY_TIMEOUT_MS / WIFI_CONNECTION_RETRY_INTERNVAL_MS;
   while ((WiFi.status() != WL_CONNECTED) && (retries < maxNumRetries)) {

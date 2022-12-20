@@ -17,7 +17,7 @@ void ActivityModeService::update()
     updateModeDebounce = true;
     mode = getNextMode(mode);
     onModeUpdated(mode);
-    Serial.println("Mode set to: " + modeToString(mode));
+    // Serial.println("Mode set to: " + modeToString(mode));
   }
   else if (!buttonIsPressed) {
     updateModeDebounce = false;

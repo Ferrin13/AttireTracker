@@ -105,6 +105,13 @@ void updateActivityHistoryRequest(String rfidUid)
 {
   String path = getModePath(modeService.getMode(), rfidUid);
   String result = httpsService.post(host, path, "");
+
+  if(result == "")
+  {
+    showPieceUpdate("Empty HTTP Response", "N/A");
+    return;
+  }
+
   String pieceName = getStringProperty(result, "pieceName");
   String newStatus = getStringProperty(result, "description");
   showPieceUpdate(pieceName, newStatus);
